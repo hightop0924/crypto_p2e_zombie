@@ -1,40 +1,34 @@
-pragma solidity ^=0.5.0;
+pragma solidity >=0.5.0 <0.6.0;
 
 import "./zombiehelper.sol";
-import "./safemath.sol";
-
 
 contract ZombieAttack is ZombieHelper {
+    uint256 randNonce = 0;
+    uint256 attackVictoryProbability = 70;
 
-    using SafeMath for uint256;
-    using SafeMath for uint32;
-    using SafeMath for uint16;
+    function randMod(uint256 _modulus) internal returns (uint256) {
+        randNonce = randNonce.add(1);
+        return
+            uint256(keccak256(abi.encodePacked(now, msg.sender, randNonce))) %
+            _modulus;
+    }
 
-    uint randNonce = 0;
-
-    uint attackVictoryProbability = 70;
-
-    function attack(uint _zombieId, uint _targetId) external onlyOwnerOf {
+    function attack(uint256 _zombieId, uint256 _targetId)
+        external
+        onlyOwnerOf(_zombieId)
+    {
         Zombie storage myZombie = zombies[_zombieId];
         Zombie storage enemyZombie = zombies[_targetId];
-        
-        uint rand = randMod(100);
+        uint256 rand = randMod(100);
         if (rand <= attackVictoryProbability) {
-            myZombie.winCount.add(1);
-            myZombie.level.add(1);
-            enemyZombie.lossCount ++;
+            myZombie.winCount = myZombie.winCount.add(1);
+            myZombie.level = myZombie.level.add(1);
+            enemyZombie.lossCount = enemyZombie.lossCount.add(1);
             feedAndMultiply(_zombieId, enemyZombie.dna, "zombie");
         } else {
-            myZombie.lossCount.add(1);
-            enemyZombie.winCount.add(1);
-            _triggerCooldown(enemyZombie);
+            myZombie.lossCount = myZombie.lossCount.add(1);
+            enemyZombie.winCount = enemyZombie.winCount.add(1);
+            _triggerCooldown(myZombie);
         }
     }
-
-    function randMod(uint _modulus) internal returns (uint) {
-        randNonce.add(1);
-        return uint(keccak256(abi.encodePacked(now, msg.sender, randNonce))) % modulus;
-    }
-
-
 }
