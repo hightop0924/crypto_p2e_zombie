@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "ganache": "ganache-cli -m \"harvest pizza suit frown pull ahead relax figure couch pole immune fantasy\" -e 100000000"
+  },
   "dependencies": {
     "@openzeppelin/contracts": "^4.8.3",
     "truffle-hdwallet-provider": "^1.0.17"

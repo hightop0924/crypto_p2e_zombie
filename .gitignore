@@ -3,3 +3,4 @@
 /frontend/build
 /frontend/coverage
 /build
+/.env

@@ -43,8 +43,9 @@
 
 // require('dotenv').config();
 // const { MNEMONIC, PROJECT_ID } = process.env;
+const mnemonic = 'harvest pizza suit frown pull ahead relax figure couch pole immune fantasy';
 
-// const HDWalletProvider = require('@truffle/hdwallet-provider');
+const HDWalletProvider = require('truffle-hdwallet-provider');
 
 module.exports = {
   /**
@@ -54,7 +55,7 @@ module.exports = {
    * run `develop` or `test`. You can ask a truffle command to use a specific
    * network from the command line, e.g
    *
-   * $ truffle test --network <network-name>
+   * $ truffle test test test test test test test test test test test--network <network-name>
    */
 
   networks: {
@@ -64,12 +65,14 @@ module.exports = {
     // tab if you use this network and you must also set the `host`, `port` and `network_id`
     // options below to some value.
     //
-    // development: {
-    //  host: "127.0.0.1",     // Localhost (default: none)
-    //  port: 8545,            // Standard Ethereum port (default: none)
-    //  network_id: "*",       // Any network (default: none)
-    // },
-    //
+    development: {
+     provider: () => new HDWalletProvider(mnemonic, `http://127.0.0.1:8545`), 
+     host: "127.0.0.1",     // Localhost (default: none)
+     port: 8545,            // Standard Ethereum port (default: none)
+     network_id: "*",       // Any network (default: none)
+    //  from:"0xDA218fD737F6BBdC299c27c13418D55Da580c4a2"
+    },
+    
     // An additional network, but with some advanced options…
     // advanced: {
     //   port: 8777,             // Custom port
@@ -96,6 +99,28 @@ module.exports = {
     //   network_id: 2111,   // This network is yours, in the cloud.
     //   production: true    // Treats this network as if it was a public net. (default: false)
     // }
+    // Configuration for mainnet
+    mainnet: {
+      provider: function () {
+        // Setting the provider with the Infura Mainnet address and Token
+        return new HDWalletProvider(mnemonic, "https://mainnet.infura.io/v3/d2a104f7252f4e8ea191a9bde82e85c1")
+      },
+      network_id: "1",
+      gas: 5500000,
+      confirmations: 2,
+      timeoutBlocks: 500,
+      skipDryRun: true
+
+    },
+    // Configuration for rinkeby network
+    rinkeby: {
+      // Special function to setup the provider
+      provider: function () {
+        // Setting the provider with the Infura Rinkeby address and Token
+        return new HDWalletProvider(mnemonic, "https://rinkeby.infura.io/v3/YOUR_TOKEN")
+      },
+      network_id: "4"//Fill in the `network_id` for the Rinkeby network.
+    }
   },
 
   // Set default mocha options here, use special reporters, etc.
